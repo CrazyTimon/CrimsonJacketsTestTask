@@ -24,47 +24,70 @@ var menu_elements = Backbone.View.extend({
             {
                 step: function(){
                     $("#canvas").attr("width", document.width + "px");
-                        $("#canvas").attr("height", document.height + "px");
-                        var canvas=document.getElementById("canvas");
-                        var x=canvas.getContext("2d");
-                        x.beginPath();
-                        x.strokeStyle = "#FF0000";
-                        x.stroke();
-                        $.each(that.main_list.menu_elements, function(index, value){
-                            if(index===1 && index!=0 && index != that.main_list.menu_elements.length-1){
-                                var top1 = that.main_list.menu_elements[index].$el.offset().top,
-                                    top2 = that.main_list.menu_elements[index-1].$el.offset().top,
-                                    left1 = that.main_list.menu_elements[index].$el.offset().left,
-                                    left2 = that.main_list.menu_elements[index-1].$el.offset().left;
-                                x.moveTo(left1-10, top1-10);
-                                x.lineTo(left2+3, top2+3);
-                                x.strokeStyle = "#FF0000";
-                                x.stroke();
-                            } else if(index == that.main_list.menu_elements.length-1 && that.main_list.menu_elements.length > 1){
-                                debugger;
-                                var top1 = that.main_list.menu_elements[index].$el.offset().top,
-                                    top2 = that.main_list.menu_elements[index-1].$el.offset().top,
-                                    left1 = that.main_list.menu_elements[index].$el.offset().left,
-                                    left2 = that.main_list.menu_elements[index-1].$el.offset().left;
-                                x.moveTo(left1-10, top1-10);
-                                x.lineTo(left2-10, top2-10);
-                                x.strokeStyle = "#FF0000";
-                                x.stroke();
-                                x.moveTo(left1-10, top1-10);
-                                x.lineTo(0 , 650);
-                                x.strokeStyle = "#FF0000";
-                                x.stroke();
-                            } else if(index!=0){
-                                var top1 = that.main_list.menu_elements[index].$el.offset().top,
-                                    top2 = that.main_list.menu_elements[index-1].$el.offset().top,
-                                    left1 = that.main_list.menu_elements[index].$el.offset().left,
-                                    left2 = that.main_list.menu_elements[index-1].$el.offset().left;
-                                x.moveTo(left1-10, top1-10);
-                                x.lineTo(left2-10, top2-10);
-                                x.strokeStyle = "#FF0000";
+                    $("#canvas").attr("height", document.height + "px");
+                    var canvas=document.getElementById("canvas");
+                    var x=canvas.getContext("2d");
+                    x.beginPath();
+                    var grad= x.createLinearGradient(0, 0, 600, 1000);
+                            grad.addColorStop(0, "#15ABE9");
+                            grad.addColorStop(0.5, "#6DB653");
+                            grad.addColorStop(1, "#15ABE9");
+                            x.strokeStyle = grad;
+                    $.each(that.main_list.menu_elements, function(index, value){
+                        if(index===1 && index!=0 && index != that.main_list.menu_elements.length-1){
+                            var top1 = that.main_list.menu_elements[index].$el.offset().top,
+                                top2 = that.main_list.menu_elements[index-1].$el.offset().top,
+                                left1 = that.main_list.menu_elements[index].$el.offset().left,
+                                left2 = that.main_list.menu_elements[index-1].$el.offset().left;
+                            x.moveTo(left1-10, top1-10);
+                            if(that.main_list.last_selected_el){
+                                    x.lineTo(left2-10, top2-10);                                        
+                            } else{
+                                x.lineTo(left2+10, top2+10);                                        
+                            }
+                            x.stroke();
+                        } else if(index == that.main_list.menu_elements.length-1 && that.main_list.menu_elements.length > 1){
+                            var top1 = that.main_list.menu_elements[index].$el.offset().top,
+                                top2 = that.main_list.menu_elements[index-1].$el.offset().top,
+                                left1 = that.main_list.menu_elements[index].$el.offset().left,
+                                left2 = that.main_list.menu_elements[index-1].$el.offset().left;
+                            x.moveTo(left1-10, top1-10);
+                            x.lineTo(left2-10, top2-10);
+                            x.stroke();
+                            x.moveTo(left1-10, top1-10);
+                            x.lineTo(0 , 650);
+                            x.stroke();
+                        } else if(index!=0){
+                            var top1 = that.main_list.menu_elements[index].$el.offset().top,
+                                top2 = that.main_list.menu_elements[index-1].$el.offset().top,
+                                left1 = that.main_list.menu_elements[index].$el.offset().left,
+                                left2 = that.main_list.menu_elements[index-1].$el.offset().left;
+                            x.moveTo(left1-10, top1-10);
+                            x.lineTo(left2-10, top2-10);
+                            x.stroke();
+                        } else if(index===0 && !that.main_list.last_selected_el){
+                            var top1 = that.main_list.menu_elements[index].$el.offset().top,
+                                left1 = that.main_list.menu_elements[index].$el.offset().left;
+                            x.moveTo(left1, top1+10);
+                            x.lineTo(0, top1);
+                            x.stroke();
+                        } else if(index===0 && that.main_list.last_selected_el){
+                            var top1 = that.main_list.last_selected_el.$el.offset().top,
+                                left1 = that.main_list.last_selected_el.$el.offset().left,
+                                top2 = that.main_list.menu_elements[index].$el.offset().top,
+                                left2 = that.main_list.menu_elements[index].$el.offset().left;
+                            x.moveTo(left1+20, top1+10);
+                            x.lineTo(left2-10, top2-10);
+                            x.stroke();
+                        }
+                        if(that.main_list.last_selected_el){
+                                var top = that.main_list.last_selected_el.$el.offset().top,
+                                    left = that.main_list.last_selected_el.$el.offset().left;
+                                x.moveTo(left, top+10);
+                                x.lineTo(0, top+10);
                                 x.stroke();
                             }
-                        });
+                    });
                 },
                 done: function(){
                     that.$el.animate({
@@ -77,8 +100,11 @@ var menu_elements = Backbone.View.extend({
                             var canvas=document.getElementById("canvas");
                             var x=canvas.getContext("2d");
                             x.beginPath();
-                            x.strokeStyle = "#FF0000";
-                            x.stroke();
+                            var grad= x.createLinearGradient(0, 0, 600, 1000);
+                                grad.addColorStop(0, "#15ABE9");
+                                grad.addColorStop(0.5, "#6DB653");
+                                grad.addColorStop(1, "#15ABE9");
+                                x.strokeStyle = grad;
                             $.each(that.main_list.menu_elements, function(index, value){
                                 if(index===1 && index!=0 && index != that.main_list.menu_elements.length-1){
                                     var top1 = that.main_list.menu_elements[index].$el.offset().top,
@@ -86,22 +112,22 @@ var menu_elements = Backbone.View.extend({
                                         left1 = that.main_list.menu_elements[index].$el.offset().left,
                                         left2 = that.main_list.menu_elements[index-1].$el.offset().left;
                                     x.moveTo(left1-10, top1-10);
-                                    x.lineTo(left2+3, top2+3);
-                                    x.strokeStyle = "#FF0000";
+                                    if(that.main_list.last_selected_el){
+                                        x.lineTo(left2-10, top2-10);                                        
+                                    } else{
+                                        x.lineTo(left2+10, top2+10);                                        
+                                    }
                                     x.stroke();
                                 } else if(index == that.main_list.menu_elements.length-1 && that.main_list.menu_elements.length > 1){
-                                    debugger;
                                     var top1 = that.main_list.menu_elements[index].$el.offset().top,
                                         top2 = that.main_list.menu_elements[index-1].$el.offset().top,
                                         left1 = that.main_list.menu_elements[index].$el.offset().left,
                                         left2 = that.main_list.menu_elements[index-1].$el.offset().left;
                                     x.moveTo(left1-10, top1-10);
                                     x.lineTo(left2-10, top2-10);
-                                    x.strokeStyle = "#FF0000";
                                     x.stroke();
                                     x.moveTo(left1-10, top1-10);
                                     x.lineTo(0 , 650);
-                                    x.strokeStyle = "#FF0000";
                                     x.stroke();
                                 } else if(index!=0){
                                     var top1 = that.main_list.menu_elements[index].$el.offset().top,
@@ -110,7 +136,27 @@ var menu_elements = Backbone.View.extend({
                                         left2 = that.main_list.menu_elements[index-1].$el.offset().left;
                                     x.moveTo(left1-10, top1-10);
                                     x.lineTo(left2-10, top2-10);
-                                    x.strokeStyle = "#FF0000";
+                                    x.stroke();
+                                } else if(index===0 && !that.main_list.last_selected_el){
+                                    var top1 = that.main_list.menu_elements[index].$el.offset().top,
+                                        left1 = that.main_list.menu_elements[index].$el.offset().left;
+                                    x.moveTo(left1, top1+10);
+                                    x.lineTo(0, top1);
+                                    x.stroke();
+                                } else if(index===0 && that.main_list.last_selected_el){
+                                    var top1 = that.main_list.last_selected_el.$el.offset().top,
+                                        left1 = that.main_list.last_selected_el.$el.offset().left,
+                                        top2 = that.main_list.menu_elements[index].$el.offset().top,
+                                        left2 = that.main_list.menu_elements[index].$el.offset().left;
+                                    x.moveTo(left1+20, top1+10);
+                                    x.lineTo(left2-10, top2-10);
+                                    x.stroke();
+                                }
+                                if(that.main_list.last_selected_el){
+                                    var top = that.main_list.last_selected_el.$el.offset().top,
+                                        left = that.main_list.last_selected_el.$el.offset().left;
+                                    x.moveTo(left, top+10);
+                                    x.lineTo(0, top+10);
                                     x.stroke();
                                 }
                             });
@@ -148,6 +194,71 @@ var menu_elements = Backbone.View.extend({
                 } else if(handler.prop === "left"){                
                     that.left = pos;
                 }
+                $("#canvas").attr("width", document.width + "px");
+                    $("#canvas").attr("height", document.height + "px");
+                    var canvas=document.getElementById("canvas");
+                    var x=canvas.getContext("2d");
+                    x.beginPath();
+                    var grad= x.createLinearGradient(0, 0, 600, 1000);
+                    grad.addColorStop(0, "#15ABE9");
+                    grad.addColorStop(0.5, "#6DB653");
+                    grad.addColorStop(1, "#15ABE9");
+                    x.strokeStyle = grad;
+                    $.each(that.main_list.menu_elements, function(index, value){
+                        if(index===1 && index!=0 && index != that.main_list.menu_elements.length-1){
+                            var top1 = that.main_list.menu_elements[index].$el.offset().top,
+                                top2 = that.main_list.menu_elements[index-1].$el.offset().top,
+                                left1 = that.main_list.menu_elements[index].$el.offset().left,
+                                left2 = that.main_list.menu_elements[index-1].$el.offset().left;
+                            x.moveTo(left1-10, top1-10);
+                            if(that.main_list.last_selected_el){
+                                    x.lineTo(left2-10, top2-10);                                        
+                            } else{
+                                x.lineTo(left2+10, top2+10);                                        
+                            }
+                            x.stroke();
+                        } else if(index == that.main_list.menu_elements.length-1 && that.main_list.menu_elements.length > 1){
+                            var top1 = that.main_list.menu_elements[index].$el.offset().top,
+                                top2 = that.main_list.menu_elements[index-1].$el.offset().top,
+                                left1 = that.main_list.menu_elements[index].$el.offset().left,
+                                left2 = that.main_list.menu_elements[index-1].$el.offset().left;
+                            x.moveTo(left1-10, top1-10);
+                            x.lineTo(left2-10, top2-10);
+                            x.stroke();
+                            x.moveTo(left1-10, top1-10);
+                            x.lineTo(0 , 650);
+                            x.stroke();
+                        } else if(index!=0){
+                            var top1 = that.main_list.menu_elements[index].$el.offset().top,
+                                top2 = that.main_list.menu_elements[index-1].$el.offset().top,
+                                left1 = that.main_list.menu_elements[index].$el.offset().left,
+                                left2 = that.main_list.menu_elements[index-1].$el.offset().left;
+                            x.moveTo(left1-10, top1-10);
+                            x.lineTo(left2-10, top2-10);
+                            x.stroke();
+                        } else if(index===0 && !that.main_list.last_selected_el){
+                            var top1 = that.main_list.menu_elements[index].$el.offset().top,
+                                left1 = that.main_list.menu_elements[index].$el.offset().left;
+                            x.moveTo(left1, top1+10);
+                            x.lineTo(0, top1);
+                            x.stroke();
+                        } else if(index===0 && that.main_list.last_selected_el){
+                            var top1 = that.main_list.last_selected_el.$el.offset().top,
+                                left1 = that.main_list.last_selected_el.$el.offset().left,
+                                top2 = that.main_list.menu_elements[index].$el.offset().top,
+                                left2 = that.main_list.menu_elements[index].$el.offset().left;
+                            x.moveTo(left1+20, top1+10);
+                            x.lineTo(left2-10, top2-10);
+                            x.stroke();
+                        }
+                        if(that.main_list.last_selected_el){
+                                var top = that.main_list.last_selected_el.$el.offset().top,
+                                    left = that.main_list.last_selected_el.$el.offset().left;
+                                x.moveTo(left, top+10);
+                                x.lineTo(0, top+10);
+                                x.stroke();
+                            }
+                    });
             },
             done: function(){
                 if(!that.menu){
@@ -213,9 +324,22 @@ var menu = Backbone.View.extend({
             });            
         } else {
             $(".content-box").css("width", document.width - this.last_selected_el.$el.offset().left + 10);
+
             $(".content-box").show('slide', {direction: 'right'}, 1000, function(){
-                $("#canvas").attr("width", (document.width - $(".content-box").width()) + "px");
+                $("#canvas").attr("width", (document.width - $(".content-box").width()+50) + "px");
+                var canvas=document.getElementById("canvas");
+                var x=canvas.getContext("2d");
+                x.beginPath();
+                var grad= x.createLinearGradient(0, 0, 600, 1000);
+                grad.addColorStop(0, "#15ABE9");
+                grad.addColorStop(0.5, "#6DB653");
+                grad.addColorStop(1, "#15ABE9");
+                x.strokeStyle = grad;
+                x.moveTo(that.last_selected_el.$el.offset().left+150, that.last_selected_el.$el.offset().top+10);
+                x.lineTo(0, that.last_selected_el.$el.offset().top+10);
+                x.stroke();
             });
+
             $(".content-box .content").html(this.model.get("content"));
             $(".content").css("margin-left", this.last_selected_el.$el.width() + 50);
         }
